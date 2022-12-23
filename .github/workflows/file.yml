@@ -40,7 +40,7 @@ jobs:
     - run: echo ${{ needs.get_pipeline_arn.outputs.arn }}
     - name: check_on_Dynamodb
       run: |
-        value=$(aws dynamodb execute-statement --statement "SELECT * FROM execution_status WHERE pipelineExecutionArn='${{ needs.get_pipeline_arn.outputs.arn }}'")
+        "value=$(aws dynamodb execute-statement --statement "SELECT * FROM execution_status WHERE pipelineExecutionArn='${{ needs.get_pipeline_arn.outputs.arn }}'")"
         if [ -z "$value" ]; then
          aws dynamodb execute-statement --statement "UPDATE execution_status SET pipelineExecutionArn='${{ needs.get_pipeline_arn.outputs.arn }}' SET github_runid='${{ github.run_id }}'"
       env:
