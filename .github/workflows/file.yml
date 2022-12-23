@@ -26,10 +26,10 @@ jobs:
     - id: Fetch_Arn
       name: Fetch SagemakerArn
       run: |
-        aws sagemaker list-pipeline-executions --pipeline-name AbalonePipeline --sort-by CreationTime --sort-order Descending --output json | jq .PipelineExecutionSummaries[].PipelineExecutionArn
+        aws dynamodb execute-statement --statement "SELECT * FROM execution_status WHERE pipelineExecutionArn='test'" 
       env:
-        AWS_ACCESS_KEY_ID: "{{secrets.AWS_ACCESS_KEY_ID}}"
-        AWS_SECRET_ACCESS_KEY: "{{secrets.AWS_SECRET_ACCESS_KEY}}"
+        AWS_ACCESS_KEY_ID: "{{ secrets.AWS_ACCESS_KEY_ID }}"
+        AWS_SECRET_ACCESS_KEY: "{{ secrets.AWS_SECRET_ACCESS_KEY }}"
         AWS_DEFAULT_REGION: "us-west-2"
     
   check_execution_status:
