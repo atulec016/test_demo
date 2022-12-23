@@ -1,0 +1,44 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  Pipeline_exectuion:
+    name: Pipeline_exectuion
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+     - run: echo "Pipeline submitted succeessfully"
+   
+  get_pipeline_arn:
+    name: get_pipeline_run
+    needs: Pipeline_exectuion
+    runs-on: ubuntu-latest
+    outputs:
+      arn: $ {{ steps.Fetch_Arn.outputs.value }}
+    steps:
+    - uses: actions/checkout@v2
+    - id: Fetch_Arn
+      name: Fetch SagemakerArn
+      run: |
+        aws sagemaker list-pipeline-executions --pipeline-name AbalonePipeline --sort-by CreationTime --sort-order Descending --output json | jq .PipelineExecutionSummaries[].PipelineExecutionArn
+      env:
+        AWS_ACCESS_KEY_ID: "{{secrets.AWS_ACCESS_KEY_ID}}"
+        AWS_SECRET_ACCESS_KEY: "{{secrets.AWS_SECRET_ACCESS_KEY}}"
+        AWS_DEFAULT_REGION: "us-west-2"
+    
+  check_execution_status:
+    name: Status check execution
+    needs: get_pipeline_arn
+    runs-on: ubuntu-latest
+    steps:
+    - name : get the status
+      run: Aws dynamo db get item from table where excution arn = fetch arn.output varible and github run ID= $ github.runID
+           if value blank insert item
+           else if status is success  exit 0
+           else exit 1
