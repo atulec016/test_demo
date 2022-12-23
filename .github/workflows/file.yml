@@ -37,7 +37,13 @@ jobs:
     needs: get_pipeline_arn
     runs-on: ubuntu-latest
     steps:
-    - run: echo "${{ needs.get_pipeline_arn.outputs.arn }}"
+    - run: echo ${{ needs.get_pipeline_arn.outputs.arn }}
+    - name: check_on_Dynamodb
+      run: |
+        echo "value=(aws dynamodb execute-statement --statement "SELECT * FROM execution_status WHERE pipelineExecutionArn='${{ needs.get_pipeline_arn.outputs.arn }}')"
+        if value == NULL;then
+           aws dynamodb execute-statement --statement "UPDATE execution_status SET pipelineExecutionArn=${{ needs.get_pipeline_arn.outputs.arn }} SET github_runid=${{ github.run_id }} 
+        
     - name : get the status
       run: Aws dynamo db get item from table where excution arn = fetch arn.output varible and github run ID= $ github.runID
            if value blank insert item
