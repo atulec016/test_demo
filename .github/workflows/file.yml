@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: read
+      contents: write
     outputs:
       arn: ${{ steps.Fetch_Arn.outputs.value }}
     steps:
@@ -29,7 +29,7 @@ jobs:
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::858958072653:role/github-actions-role
+        role-to-assume: ${{secrets.roles }}
         aws-region: us-west-2
     - id: Fetch_Arn
       name: Fetch SagemakerArn
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: read
+      contents: write
     steps:
     - run: echo ${{ needs.get_pipeline_arn.outputs.arn }}
     - name: Configure AWS credentials from Test account
