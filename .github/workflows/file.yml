@@ -19,11 +19,11 @@ jobs:
     name: get_pipeline_run
     needs: Pipeline_exectuion
     runs-on: ubuntu-latest
+    outputs:
+      arn: ${{ steps.Fetch_Arn.outputs.value }}
     permissions:
       id-token: write
       contents: write
-    outputs:
-      arn: ${{ steps.Fetch_Arn.outputs.value }}
     steps:
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
@@ -31,11 +31,11 @@ jobs:
         role-to-assume: ${{secrets.roles }}
         aws-region: us-west-2
     - uses: actions/checkout@v2
-
     - id: Fetch_Arn
       name: Fetch SagemakerArn
       run: |
         echo "value=$(aws sagemaker list-pipeline-executions --pipeline-name AbalonePipeline --sort-by CreationTime --sort-order Descending --output json | jq .PipelineExecutionSummaries[].PipelineExecutionArn)" >> $GITHUB_OUTPUT
+        echo ${{ steps.Fetch_Arn.outputs.value }}
     
   check_execution_status:
     name: Status check execution
