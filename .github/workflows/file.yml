@@ -23,14 +23,15 @@ jobs:
       arn: ${{ steps.Fetch_Arn.outputs.value }}
     steps:
     - uses: actions/checkout@v2
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.roles }}
+        aws-region: us-west-2
     - id: Fetch_Arn
       name: Fetch SagemakerArn
       run: |
         echo "value=$(aws sagemaker list-pipeline-executions --pipeline-name AbalonePipeline --sort-by CreationTime --sort-order Descending --output json | jq .PipelineExecutionSummaries[].PipelineExecutionArn)" >> $GITHUB_OUTPUT
-      env:
-        AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
-        AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-        AWS_DEFAULT_REGION: "us-west-2"
     
   check_execution_status:
     name: Status check execution
@@ -38,14 +39,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: echo ${{ needs.get_pipeline_arn.outputs.arn }}
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.roles }}
+        aws-region: us-west-2
     - name: check_on_Dynamodb
       run: |
         "value=$(aws dynamodb execute-statement --statement "SELECT * FROM execution_status WHERE pipelineExecutionArn='${{ needs.get_pipeline_arn.outputs.arn }}'")"
         if [ "${#value[@]}" == 0 ]
         then
            aws dynamodb execute-statement --statement "UPDATE execution_status SET pipelineExecutionArn='${{ needs.get_pipeline_arn.outputs.arn }}' SET github_runid='${{ github.run_id }}'"
-      env:
-        AWS_ACCESS_KEY_ID: "${{ secrets.AWS_ACCESS_KEY_ID }}"
-        AWS_SECRET_ACCESS_KEY: "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-        AWS_DEFAULT_REGION: "us-west-2"
         
