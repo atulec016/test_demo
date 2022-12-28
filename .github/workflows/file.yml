@@ -25,12 +25,13 @@ jobs:
     outputs:
       arn: ${{ steps.Fetch_Arn.outputs.value }}
     steps:
-    - uses: actions/checkout@v2
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: ${{secrets.roles }}
         aws-region: us-west-2
+    - uses: actions/checkout@v2
+
     - id: Fetch_Arn
       name: Fetch SagemakerArn
       run: |
@@ -50,6 +51,7 @@ jobs:
       with:
         role-to-assume: ${{ secrets.roles }}
         aws-region: us-west-2
+    - uses: actions/checkout@v2
     - name: check_on_Dynamodb
       run: |
         "value=$(aws dynamodb execute-statement --statement "SELECT * FROM execution_status WHERE pipelineExecutionArn='${{ needs.get_pipeline_arn.outputs.arn }}'")"
