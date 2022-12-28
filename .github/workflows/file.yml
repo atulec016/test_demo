@@ -26,7 +26,7 @@ jobs:
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: ${{ secrets.roles }}
+        role-to-assume: arn:aws:iam::858958072653:role/github-actions-role
         aws-region: us-west-2
     - id: Fetch_Arn
       name: Fetch SagemakerArn
