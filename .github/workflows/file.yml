@@ -19,6 +19,9 @@ jobs:
     name: get_pipeline_run
     needs: Pipeline_exectuion
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     outputs:
       arn: ${{ steps.Fetch_Arn.outputs.value }}
     steps:
@@ -37,6 +40,9 @@ jobs:
     name: Status check execution
     needs: get_pipeline_arn
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
     - run: echo ${{ needs.get_pipeline_arn.outputs.arn }}
     - name: Configure AWS credentials from Test account
