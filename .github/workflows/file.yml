@@ -46,6 +46,7 @@ jobs:
       contents: write
     steps:
     - run: echo ${{ needs.get_pipeline_arn.outputs.arn }}
+    - run: echo ${{ github_runid }}
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
       with:
