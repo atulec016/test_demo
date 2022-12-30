@@ -59,6 +59,7 @@ jobs:
          echo $value
          if [ $value == "null" ]; then
             aws dynamodb execute-statement --statement "INSERT INTO execution_status VALUE {'pipelineExecutionArn':'arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa','github_runid':'${{ github.run_id }}'}"
+            exit 1
          else
             status_check=$(aws dynamodb execute-statement --statement "SELECT status FROM execution_status WHERE pipelineExecutionArn='arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa'" | jq '.Items[0] .status .S')
             if [ $status_check -eq "Succeeded" ]
@@ -66,6 +67,7 @@ jobs:
                echo "🎉🎉Sagemaker Pipeline completed successfully 🚀🚀"
             else
                echo "Sagemaker pipleline failing with status: $status_check 🐧"
+               exit 1
             fi
          fi
         
