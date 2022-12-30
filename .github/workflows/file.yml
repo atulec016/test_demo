@@ -57,13 +57,8 @@ jobs:
       run: |
          value=$(aws dynamodb execute-statement --statement "SELECT pipelineExecutionArn FROM execution_status WHERE pipelineExecutionArn='arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa'"| jq '.Items[0] .pipelineExecutionArn .S')
          echo $value
-         if [ -z "$value" ] then
+         if [ -z "$value" ]
            aws dynamodb execute-statement --statement "UPDATE execution_status SET pipelineExecutionArn='arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa' SET github_runid='${{ github.run_id }}'"
          else
-           status_check=$(aws dynamodb execute-statement --statement "SELECT status FROM execution_status WHERE pipelineExecutionArn='arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa'")
-           if [[ $status_check == "Succeeded" ]]; then
-             echo "Pipeline ran successfully";
-           else
-             echo "Pipeline failed to fetch the status"
-             exit 1   
+           status_check=$(aws dynamodb execute-statement --statement "SELECT status FROM execution_status WHERE pipelineExecutionArn='arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa'")  
         
