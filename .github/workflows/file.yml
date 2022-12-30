@@ -56,6 +56,8 @@ jobs:
     - name: check_on_Dynamodb
       run: |
         "value=$(aws dynamodb execute-statement --statement "SELECT pipelineExecutionArn FROM execution_status WHERE pipelineExecutionArn='arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa'")"
+        fetch=$value | jq '.Items[0] .pipelineExecutionArn'
+        echo $fetch
         if [[ -z "$value" ]] then
            aws dynamodb execute-statement --statement "UPDATE execution_status SET pipelineExecutionArn='arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa' SET github_runid='${{ github.run_id }}'"
         else
