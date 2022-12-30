@@ -55,9 +55,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: check_on_Dynamodb
       run: |
-        value=$(aws dynamodb execute-statement --statement "SELECT pipelineExecutionArn FROM execution_status WHERE pipelineExecutionArn='arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa'"| jq '.Items[0] .pipelineExecutionArn .S')
+        value=$(aws dynamodb get-item --table-name gdna-ai-kite-it-dev-pipeline-exec-status-us-west-2 --key '{"execution_arn": {"S": "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" }}')
         echo $value
-        if [ $value == "null" ]; then
+        if [ -z "$value" ]; then
           aws dynamodb execute-statement --statement "INSERT INTO execution_status VALUE {'pipelineExecutionArn':'arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa','github_runid':'${{ github.run_id }}'}"
           exit 1
         else
