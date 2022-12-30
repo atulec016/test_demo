@@ -61,7 +61,7 @@ jobs:
           aws dynamodb put-item --table-name execution_status --item '{"pipelineExecutionArn": {"S": "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa"}, "github_runid": {"S": "${{ github.run_id }}"}}'
           exit 1
         else
-          status_check=$(aws dynamodb execute-statement --statement "SELECT status FROM execution_status WHERE pipelineExecutionArn='arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa'" | jq '.Items[0] .status .S')
+          status_check=$(aws dynamodb get-item --table-name execution_status --key '{"pipelineExecutionArn": {"S": "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" }}' | jq -r '.Item .status .S')
           echo $status_check
           if [ "$status_check" == "Succeeded" ]; then
               echo "🎉🎉Sagemaker Pipeline completed successfully 🚀🚀"
