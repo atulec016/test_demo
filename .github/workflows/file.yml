@@ -18,6 +18,7 @@ jobs:
   get_pipeline_arn:
     name: get_pipeline_run
     needs: Pipeline_exectuion
+    environment: test
     runs-on: ubuntu-latest
     outputs:
       arn: ${{ steps.Fetch_Arn.outputs.value }}
