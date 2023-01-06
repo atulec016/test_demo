@@ -65,7 +65,7 @@ jobs:
           status_check=$(aws dynamodb get-item --table-name execution_status --key '{"pipelineExecutionArn": {"S": "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" }}' | jq -r '.Item .status .S')
           echo $status_check
           if [ "$status_check" == "Succeeded" ]; then
-              echo "🎉🎉\033[32m Sagemaker Pipeline completed successfully \033[0m 🚀🚀"
+              echo "\033[32mSagemaker Pipeline completed successfully\033[0m"
           else
               echo "Sagemaker pipleline failing with status: $status_check 🐧"
               exit 1
