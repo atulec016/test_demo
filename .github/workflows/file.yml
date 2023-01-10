@@ -90,11 +90,11 @@ jobs:
     - id: Fetch_status
       name: Fetch Status
       run: |
-        echo "value=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepStatus)"
-        if [ $value == "Succeeded" ] ;
+        value=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepStatus)"
+        if [ "$value" == "Succeeded" ];
         then
           echo "Pipeline completed successfully"
-        elif [ $value == "Stopped" ];
+        elif [ "$value" == "Stopped" ];
         then
           step_name=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepName)
           echo "Sagemaker Pipeline has been stopped at step: $step_name"
