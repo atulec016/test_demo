@@ -102,3 +102,4 @@ jobs:
             error_details=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].FailureReason)
             echo "Sagemaker pipline failed at processing step: $step_name with reason: $error_details"
         fi
+
