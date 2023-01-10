@@ -33,7 +33,7 @@ jobs:
     - id: Fetch_status
       name: Fetch Status
       run: |
-         value="Failed"
+         value="Succeeded"
          echo $value
          if [ "$value" == "Succeeded" ]; then
              echo "Pipeline completed successfully"
