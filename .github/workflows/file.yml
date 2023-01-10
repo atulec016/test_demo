@@ -55,6 +55,7 @@ jobs:
         aws-region: us-west-2
     - uses: actions/checkout@v2
     - name: check_on_Dynamodb
+      continue-on-error: true
       run: |
         value=$(aws dynamodb get-item --table-name execution_status --key '{"pipelineExecutionArn": {"S": "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" }}')
         echo $value
@@ -70,5 +71,36 @@ jobs:
               echo "Sagemaker pipleline failing with status: $status_check 🐧"
               exit 1
           fi
+        fi
+  fetch_status:
+    name: fetch status
+    needs:   check_execution_status
+    #environment: test
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{secrets.roles }}
+        aws-region: us-west-2
+    - uses: actions/checkout@v2
+    - id: Fetch_status
+      name: Fetch Status
+      run: |
+        echo "value=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepStatus)"
+        if [$value == "Succeeded"] 
+        then
+          echo "Pipeline completed successfully"
+        elif [$value == "Stopped" ]
+        then
+          step_name=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepName)
+          echo "\e[1;31mSagemaker Pipeline has been stopped at step: $step_name\e[0m"
+        else
+          step_name=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepName)
+          error_details=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].FailureReason)
+          echo "\e[1;31mSagemaker pipline failed at processing step: $step_name with reason: $error_details\e[0m"
         fi
         
