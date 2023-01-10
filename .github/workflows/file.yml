@@ -90,7 +90,7 @@ jobs:
     - id: Fetch_status
       name: Fetch Status
       run: |
-        value=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepStatus)"
+        value=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepStatus)
         if [ "$value" == "Succeeded" ];
         then
           echo "Pipeline completed successfully"
