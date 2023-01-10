@@ -1,0 +1,48 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub 🚀
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  Pipeline_exectuion:
+    name: Pipeline_exectuion
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+     - run: echo "Pipeline submitted succeessfully"
+     
+  fetch_status:
+    name: fetch status
+    #needs:   check_execution_status
+    #environment: test
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{secrets.roles }}
+        aws-region: us-west-2
+    - uses: actions/checkout@v2
+    - id: Fetch_status
+      name: Fetch Status
+      run: |
+         value="Failed"
+         echo $value
+         if [ "$value" == "Succeeded" ]; then
+             echo "Pipeline completed successfully"
+         elif [ "$value" == "Stopped" ]; then
+             step_name=test
+             echo "Sagemaker Pipeline has been stopped at step: $step_name"
+         elif [ "$value" == "Failed" ]; then
+             step_name="testing"
+             error_details="getig"
+             echo "Sagemaker pipline failed at processing step: $step_name with reason: $error_details"
+         fi
+        
