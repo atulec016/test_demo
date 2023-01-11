@@ -94,7 +94,7 @@ jobs:
         status_check=$(aws dynamodb get-item --table-name execution_status --key '{"pipelineExecutionArn": {"S": "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" }}' | jq -r '.Item .status .S')
         echo $status_check
         if [ "$status_check" == "Succeeded" ]; then
-            echo "Pipeline completed successfully" >> $GITHUB_STEP_SUMMARY
+            echo "Sagemaker Pipeline ran successfully" >> $GITHUB_STEP_SUMMARY
         elif [ "$status_check" == "Stopped" ]; then
             step_name=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepName)
             echo "Sagemaker Pipeline has been stopped at step: $step_name" >> $GITHUB_STEP_SUMMARY
