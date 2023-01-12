@@ -31,7 +31,7 @@ jobs:
       with:
         role-to-assume: ${{secrets.roles }}
         aws-region: us-west-2
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - id: Fetch_Arn
       name: Fetch SagemakerArn
       run: |
@@ -87,7 +87,7 @@ jobs:
       with:
         role-to-assume: ${{secrets.roles }}
         aws-region: us-west-2
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - id: Fetch_status
       name: Fetch Status
       run: |
