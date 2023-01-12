@@ -12,7 +12,7 @@ jobs:
     name: Pipeline_exectuion
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v2
+     - uses: actions/checkout@v3
      - run: echo "Pipeline submitted succeessfully"
    
   get_pipeline_arn:
@@ -27,7 +27,7 @@ jobs:
       contents: write
     steps:
     - name: Configure AWS credentials from Test account
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1-node16
       with:
         role-to-assume: ${{secrets.roles }}
         aws-region: us-west-2
@@ -49,11 +49,11 @@ jobs:
     - run: echo ${{ needs.get_pipeline_arn.outputs.arn }}
     - run: echo ${{ github.run_id }}
     - name: Configure AWS credentials from Test account
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1-node16
       with:
         role-to-assume: ${{ secrets.roles }}
         aws-region: us-west-2
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: check_on_Dynamodb
       continue-on-error: true
       run: |
@@ -83,7 +83,7 @@ jobs:
       contents: write
     steps:
     - name: Configure AWS credentials from Test account
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1-node16
       with:
         role-to-assume: ${{secrets.roles }}
         aws-region: us-west-2
