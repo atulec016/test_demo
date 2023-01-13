@@ -1,0 +1,108 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  Pipeline_exectuion:
+    name: Pipeline_exectuion
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v3
+     - run: echo "Pipeline submitted succeessfully"
+   
+  get_pipeline_arn:
+    name: get_pipeline_run
+    needs: Pipeline_exectuion
+    environment: test
+    runs-on: ubuntu-latest
+    outputs:
+      arn: ${{ steps.Fetch_Arn.outputs.value }}
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        role-to-assume: ${{secrets.roles }}
+        aws-region: us-west-2
+    - uses: actions/checkout@v3
+    - id: Fetch_Arn
+      name: Fetch SagemakerArn
+      run: |
+        echo "value=$(aws sagemaker list-pipeline-executions --pipeline-name AbalonePipeline --sort-by CreationTime --sort-order Descending --output json | jq .PipelineExecutionSummaries[].PipelineExecutionArn)" >> $GITHUB_OUTPUT
+        echo ${{ steps.Fetch_Arn.outputs.value }}
+    
+  check_execution_status:
+    name: Status check execution
+    needs: get_pipeline_arn
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+    - run: echo ${{ needs.get_pipeline_arn.outputs.arn }}
+    - run: echo ${{ github.run_id }}
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        role-to-assume: ${{ secrets.roles }}
+        aws-region: us-west-2
+    - uses: actions/checkout@v3
+    - name: check_on_Dynamodb
+      continue-on-error: true
+      run: |
+        value=$(aws dynamodb get-item --table-name execution_status --key '{"pipelineExecutionArn": {"S": "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" }}')
+        echo $value
+        if [ -z "$value" ]; then
+          aws dynamodb put-item --table-name execution_status --item '{"pipelineExecutionArn": {"S": "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa"}, "github_runid": {"S": "${{ github.run_id }}"}}'
+          exit 1
+        else
+          status_check=$(aws dynamodb get-item --table-name execution_status --key '{"pipelineExecutionArn": {"S": "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" }}' | jq -r '.Item .status .S')
+          echo $status_check
+          if [ "$status_check" == "Succeeded" ]; then
+              echo -e "\e[1;31m Sagemaker Pipeline completed successfully \e[0m"
+          else
+              echo "Sagemaker pipleline failing with status: $status_check 🐧"
+              exit 1
+          fi
+        fi
+        
+  fetch_status:
+    name: fetch status
+    needs:   check_execution_status
+    #environment: test
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        role-to-assume: ${{secrets.roles }}
+        aws-region: us-west-2
+    - uses: actions/checkout@v3
+    - id: Fetch_status
+      name: Fetch Status
+      run: |
+        status_check=$(aws dynamodb get-item --table-name execution_status --key '{"pipelineExecutionArn": {"S": "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" }}' | jq -r '.Item .status .S')
+        echo $status_check
+        if [ "$status_check" == "Succeeded" ]; then
+            echo "## Job Summary: \n Sagemaker Pipeline ran successfully" >> $GITHUB_STEP_SUMMARY
+        elif [ "$status_check" == "Stopped" ]; then
+            step_name=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepName)
+            echo "## Job Summary: \n Sagemaker Pipeline has been stopped at step: $step_name" >> $GITHUB_STEP_SUMMARY
+        elif [ "$status_check" == "Failed" ]; then
+            step_name=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa" | jq .PipelineExecutionSteps[0].StepName)
+            error_details=$(aws sagemaker list-pipeline-execution-steps --pipeline-execution-arn "C" | jq .PipelineExecutionSteps[0].FailureReason)
+            echo "## Job Summary: \n Sagemaker pipline failed at processing step: $step_name with reason: $error_details" >> $GITHUB_STEP_SUMMARY
+        else
+            echo "## Job Summary: \n Unable to fetch the correct status of the execution of Sagemaker pipeline Arn: arn:aws:sagemaker:us-west-2:858958072653:pipeline/abalonepipeline/execution/er1qkmpvq7wa .Kindly check sagemaker for more details" >> $GITHUB_STEP_SUMMARY
+        fi
+
