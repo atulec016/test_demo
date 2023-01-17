@@ -1,0 +1,24 @@
+name: Pull Request Demo
+run-name: ${{ github.actor }} is running command
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
+jobs:
+  pr_status:
+    name: pr_status
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+     - name: PR status check
+       run: |
+          echo github.event.pull_request.number = ${{ github.event.pull_request.number }}
+     - name: pr test
+       shell: pwsh
+       run: |
+         $url="https://api.github.com/repos/atulec016/test_demo/pulls/${{ github.event.pull_request.number }}"
+         $status=Invoke-RestMethod -Method GET -Uri $url -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -ContentType "application/json"
+         Write-Host $status.mergeable_state
