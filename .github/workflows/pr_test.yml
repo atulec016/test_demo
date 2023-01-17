@@ -23,12 +23,11 @@ jobs:
          $status=Invoke-RestMethod -Method GET -Uri $url -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -ContentType "application/json"
          Write-Host $status.mergeable_state
          $status_1=$status.mergeable_state
+         $url_1="https://api.github.com/repos/atulec016/test_demo/issues/${{ github.event.pull_request.number }}/comments"
          if ($status.mergeable_state -eq "blocked") 
          {
-          $url_1="https://api.github.com/repos/atulec016/test_demo/issues/${{ github.event.pull_request.number }}/comments"
-          Invoke-RestMethod -Method POST -Uri $url_1 -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -Body @{body= "Pull Request status is $status_1" } -ContentType "application/json"
+          Invoke-RestMethod -Method POST -Uri $url_1 -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -Body @{body= "Pull Request status isn't mergeable" } -ContentType "application/json"
          }else
          {
-          $url_1="https://api.github.com/repos/atulec016/test_demo/issues/${{ github.event.pull_request.number }}/comments"
           Invoke-RestMethod -Method POST -Uri $url_1 -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -Body @{body= "Pull Request status is Mergeable"} -ContentType "application/json"
          }
