@@ -25,7 +25,7 @@ jobs:
          if ($status.mergeable_state == "blocked") 
          {
           url_1="https://api.github.com/repos/atulec016/test_demo/issues/${{ github.event.pull_request.number }}/comments"
-          Invoke-RestMethod -Method GET -Uri $url_1 -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -Body @{body= "Pull Request status is:"$status.mergeable_state } -ContentType "application/json"
+          Invoke-RestMethod -Method GET -Uri $url_1 -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -Body @{body= "Pull Request status is:"${status.mergeable_state} } -ContentType "application/json"
          }else
          {
           url_1="https://api.github.com/repos/atulec016/test_demo/issues/${{ github.event.pull_request.number }}/comments"
