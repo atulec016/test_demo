@@ -22,9 +22,12 @@ jobs:
          $url="https://api.github.com/repos/atulec016/test_demo/pulls/${{ github.event.pull_request.number }}"
          $status=Invoke-RestMethod -Method GET -Uri $url -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -ContentType "application/json"
          Write-Host $status.mergeable_state
-     - name: Comment PR with execution number
-       uses: thollander/actions-comment-pull-request@v2
-       with:
-         message: |
-            _(execution **${{ status.mergeable_state }}**)_
-         comment_tag: execution
+         if ($status.mergeable_state == "blocked") 
+         {
+          url_1="https://api.github.com/repos/atulec016/test_demo/issues/${{ github.event.pull_request.number }}/comments"
+          Invoke-RestMethod -Method GET -Uri $url_1 -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -Body @{body= "Pull Request status is:$status.mergeable_state" } -ContentType "application/json"
+         }else
+         {
+          url_1="https://api.github.com/repos/atulec016/test_demo/issues/${{ github.event.pull_request.number }}/comments"
+          Invoke-RestMethod -Method GET -Uri $url_1 -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -Body @{body= "Pull Request status is Mergeable} -ContentType "application/json"
+         }"
