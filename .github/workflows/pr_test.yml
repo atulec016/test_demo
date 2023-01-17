@@ -22,3 +22,9 @@ jobs:
          $url="https://api.github.com/repos/atulec016/test_demo/pulls/${{ github.event.pull_request.number }}"
          $status=Invoke-RestMethod -Method GET -Uri $url -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -ContentType "application/json"
          Write-Host $status.mergeable_state
+     - name: Comment PR with execution number
+       uses: thollander/actions-comment-pull-request@v2
+       with:
+       message: |
+        _(execution **${{ status.mergeable_state }}**)_
+       comment_tag: execution
