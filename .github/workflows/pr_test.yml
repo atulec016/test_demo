@@ -26,7 +26,7 @@ jobs:
          $url_1="https://api.github.com/repos/atulec016/test_demo/issues/${{ github.event.pull_request.number }}/comments"
          if ($status.mergeable_state -eq "blocked") 
          {
-          $body=@{"body"="The pull request can't be merged and is in $status.mergeable_state state"} | ConvertTo-Json
+          $body=@{"body"="The pull request can't be merged and is in $status_1 state"} | ConvertTo-Json
           Invoke-RestMethod -Method POST -Uri $url_1 -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -Body $body -ContentType "application/json"
          }else
          {
