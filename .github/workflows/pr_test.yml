@@ -19,11 +19,11 @@ jobs:
      - name: pr test
        shell: pwsh
        run: |
-         $url="https://api.github.com/repos/atulec016/test_demo/pulls/${{ github.event.pull_request.number }}"
+         $url="https://api.github.com/repos/atulec016/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}"
          $status=Invoke-RestMethod -Method GET -Uri $url -Headers @{Authorization = "Token ${{ secrets.GIT_TOKEN }}"} -ContentType "application/json"
          Write-Host $status.mergeable_state
          $status_1=$status.mergeable_state
-         $url_1="https://api.github.com/repos/atulec016/test_demo/issues/${{ github.event.pull_request.number }}/comments"
+         $url_1="https://api.github.com/repos/atulec016/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
          if ($status.mergeable_state -eq "blocked") 
          {
           $body=@{"body"="The pull request can't be merged and is in $status_1 state"} | ConvertTo-Json
