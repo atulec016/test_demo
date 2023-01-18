@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: GitHub Actions Demo from my personal account
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   pull_request:
@@ -6,7 +6,6 @@ on:
       - opened
       - edited
       - synchronize
-
 jobs:
   Pipeline_exectuion:
     name: Pipeline_exectuion
