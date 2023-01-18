@@ -16,8 +16,8 @@ jobs:
           echo github.repository = ${{ github.repository }}
      - name: pr check
        run: |
-         pr_status_check=$(curl -s -X GET https://api.github.com/repos/atulec016/test_demo/pulls/4 -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" | jq '.mergeable_state')
-         echo $pr_status_check
-         if [ "$pr_status_check" == "unstable" ]; then
-           curl -s -X POST "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -d '{"body":"The pull request can't be merged and is in ${{ pr_status_check state }}"}' -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}"
-         fi
+          pr_status_check=$(curl -s -X GET https://api.github.com/repos/atulec016/test_demo/pulls/4 -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" | jq '.mergeable_state')
+          echo $pr_status_check
+          if [ "$pr_status_check" == "unstable" ]; then
+            curl -s -X POST "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments" -d '{"body":"The pull request can't be merged and is in ${{ pr_status_check }} state"}' -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}"
+          fi
