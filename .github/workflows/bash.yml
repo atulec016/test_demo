@@ -7,7 +7,7 @@ on:
 jobs:
   pr_status:
     name: pr_status
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v3
      - name: PR status check
