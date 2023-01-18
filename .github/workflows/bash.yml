@@ -1,0 +1,20 @@
+name: Pull request Status
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  pr_status:
+    name: pr_status
+    runs-on: self-hosted
+    steps:
+     - uses: actions/checkout@v3
+     - name: PR status check
+       run: |
+          echo github.event.pull_request.number = ${{ github.event.pull_request.number }}
+          echo github.repository = ${{ github.repository }}
+     - name: pr check
+       run: |
+         pr_status_check=$(curl -s -X GET https://api.github.com/repos/atulec016/test_demo/pulls/4 -H "Authorization: Bearer ${{ secrets.GIT_ACCESS_TOKEN }}" | jq '.mergeable_state[]')
+         echo $pr_status_check
