@@ -16,5 +16,5 @@ jobs:
           echo github.repository = ${{ github.repository }}
      - name: pr check
        run: |
-         pr_status_check=$(curl -s -X GET https://api.github.com/repos/atulec016/test_demo/pulls/4 -H "Authorization: Bearer ${{ secrets.GIT_ACCESS_TOKEN }}" | jq '.mergeable_state[]')
+         pr_status_check=$(curl -s -X GET https://api.github.com/repos/atulec016/test_demo/pulls/4 -H "Authorization: Bearer ${{ secrets.GIT_ACCESS_TOKEN }}" | jq '.mergeable_state')
          echo $pr_status_check
