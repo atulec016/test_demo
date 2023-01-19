@@ -22,6 +22,6 @@ jobs:
           pr_status_check=$(curl -s -X GET https://api.github.com/repos/$REPO/pulls/$PR_NUMBER -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" | jq '.mergeable_state')
           echo "PR_STATUS_CHECK=$pr_status_check" >> $GITHUB_ENV
           if [ $pr_status_check = '"blocked"' ]; then
-            update=$(curl -s -X POST https://api.github.com/repos/$REPO/issues/$PR_NUMBER/comments -d '{"body": "The pull request cant be merged and is in '$PR_STATUS_CHECK' state"}' -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}")
+            update=$(curl -s -X POST https://api.github.com/repos/$REPO/issues/$PR_NUMBER/comments -d '{"body": "The pull request cant be merged and is in '${{ env.PR_STATUS_CHECK }}' state"}' -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}")
             echo $update
           fi
