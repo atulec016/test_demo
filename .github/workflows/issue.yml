@@ -1,0 +1,21 @@
+name: test
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  pr_status_check:
+    name: pr_status_check
+    runs-on: ubuntu-latest
+    if: >
+      github.event.issue.pull_request && startsWith(github.event.comment.body, 'testing')
+    steps:
+     - uses: actions/checkout@v3
+     - name: pr check
+       env:
+         REPO: ${{ github.repository }}
+         PR_NUMBER : ${{ github.event.pull_request.number }}
+       run: |
+          echo ${{ github.event.issue.number }}
+          echo ${{ github.event.pull_request.head.repo.full_name }}
