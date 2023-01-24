@@ -18,4 +18,5 @@ jobs:
          PR_NUMBER : ${{ github.event.pull_request.number }}
        run: |
           echo ${{ github.event.issue.number }}
-          echo ${{ github.event.pull_request.head.repo.full_name }}
+          echo ${{ github.event.repository.name }}
+          echo $GITHUB_REPOSITORY
