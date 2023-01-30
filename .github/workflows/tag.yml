@@ -16,4 +16,7 @@ jobs:
          PR_NUMBER : ${{ github.event.pull_request.number }}
        run: |
           tag=$(curl -s GET https://api.github.com/repos/$REPO/tags\?per_page\=1 -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" | jq -r '.[].name' )
-          echo $tag
+          $version=${tag:1}
+          echo $version
+          minor_upgrade= $version + 0.0.1
+          curl -X POST https://api.github.com/repos/OWNER/REPO/git/tags -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" -d '{"tag": ${{ minor_upgrade }} }'
