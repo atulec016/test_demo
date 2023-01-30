@@ -19,4 +19,4 @@ jobs:
           $version=${tag:1}
           echo $version
           minor_upgrade= $version + 0.0.1
-          curl -X POST https://api.github.com/repos/OWNER/REPO/git/tags -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" -d '{"tag": ${{ minor_upgrade }} }'
+          curl -X POST https://api.github.com/repos/$REPO/git/tags -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" -d '{"tag": $minor_upgrade }'
