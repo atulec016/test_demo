@@ -17,3 +17,6 @@ jobs:
          PR_NUMBER : ${{ github.event.pull_request.number }}
        run: |
           echo ${{github.ref}}
+          echo ${GITHUB_REF##*/}
+          version=$(echo $GITHUB_REF | cut -d / -f 3)
+          echo $version
