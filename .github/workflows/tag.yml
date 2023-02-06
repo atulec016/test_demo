@@ -1,0 +1,19 @@
+name: Pull request Status
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  pr_status:
+    name: pr_status
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v3
+     - name: pr check
+       env:
+         REPO: ${{ github.repository }}
+         PR_NUMBER : ${{ github.event.pull_request.number }}
+       run: |
+          tag=$(curl -s GET https://api.github.com/repos/$REPO/tags\?per_page\=1 -H "Authorization: Bearer ${{ secrets.GIT_TOKEN }}" | jq -r '.[].name' )
+          echo $tag

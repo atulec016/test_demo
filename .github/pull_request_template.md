@@ -7,7 +7,7 @@ If one wishes for changes introduced in this PR to be **promoted** to higher env
 ## Previous Behavior
 What was the previous state of the system or process that caused this work to be created?
 
-## New Behavior
+## New Behavior should be good
 What changes are new to the system or process that addresses the behavior described above?
 
 ## Tests
