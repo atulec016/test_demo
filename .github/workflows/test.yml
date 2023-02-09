@@ -10,6 +10,7 @@ on:
 jobs:
   Pipeline_exectuion:
     name: Pipeline_exectuion
+    environment: test
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v2
