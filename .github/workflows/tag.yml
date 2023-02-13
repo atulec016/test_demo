@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v3
+     - name: install-databricks-cli
+       uses: microsoft/install-databricks-cli@v1.0.0
+     - run: databricks --version
      - name: pr check
        env:
          REPO: ${{ github.repository }}
