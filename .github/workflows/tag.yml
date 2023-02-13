@@ -1,4 +1,4 @@
-name: Pull request Status
+name: Pull request Status_test
 
 on:
   pull_request:
@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v3
+     - uses: actions/setup-python@v4
+       with:
+           python-version: '3.9'
      - name: install-databricks-cli
        uses: microsoft/install-databricks-cli@v1.0.0
      - run: databricks --version
