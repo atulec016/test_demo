@@ -1,7 +1,7 @@
 name: Pull request Status_test
 
 on: 
-  pull_request
+  push
 
 jobs:
   pr_status:
