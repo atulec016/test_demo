@@ -13,8 +13,11 @@ jobs:
        with:
            python-version: '3.9'
      - name: install-databricks-cli
-       uses: microsoft/install-databricks-cli@v1.0.0
-     - run: databricks --version
+       run: |
+          pip install databricks-cli --upgrade
+          echo "DATABRICKS_HOST=https://${{ secrets.DATABRICKS_INSTANCE }}" >> $GITHUB_ENV
+          echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_PAT }}" >> $GITHUB_ENV  
+          databricks jobs list --output json
      - name: teting
        run: |
           echo ${{ github.workspace }}
