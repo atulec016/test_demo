@@ -17,6 +17,7 @@ jobs:
      - run: databricks --version
      - name: teting
        run: |
+          echo ${{ github.workspace }}
           ls
           pwd
-          "/test/testing/test.sh"
+          "${{ github.workspace }}/test/testing/test.sh"
