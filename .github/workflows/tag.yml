@@ -15,7 +15,9 @@ jobs:
      - name: install-databricks-cli
        run: |
           pip install databricks-cli --upgrade
-          echo "DATABRICKS_HOST=https://${{ secrets.DATABRICKS_INSTANCE }}" >> $GITHUB_ENV
+          host=https://${{ secrets.DATABRICKS_INSTANCE }}
+          echo $host
+          echo "DATABRICKS_HOST=${host}" >> $GITHUB_ENV
           echo "DATABRICKS_TOKEN=${{ secrets.DATABRICKS_PAT }}" >> $GITHUB_ENV  
           databricks jobs list --output json
      - name: teting
