@@ -15,12 +15,5 @@ jobs:
      - name: install-databricks-cli
        uses: microsoft/install-databricks-cli@v1.0.0
      - run: databricks --version
-     - name: pr check
-       env:
-         REPO: ${{ github.repository }}
-         PR_NUMBER : ${{ github.event.pull_request.number }}
-       run: |
-          echo ${{github.ref}}
-          echo ${GITHUB_REF##*/}
-          version=$(echo $GITHUB_REF | cut -d / -f 3)
-          echo $version
+     - name: teting
+       run: "/test/testing/test.sh"
