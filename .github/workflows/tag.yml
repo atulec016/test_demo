@@ -19,4 +19,4 @@ jobs:
        run: |
           ls
           pwd
-          "../../test/testing/test.sh"
+          "/test/testing/test.sh"
