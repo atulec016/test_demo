@@ -16,4 +16,7 @@ jobs:
        uses: microsoft/install-databricks-cli@v1.0.0
      - run: databricks --version
      - name: teting
-       run: "../../test/testing/test.sh"
+       run: |
+          ls
+          pwd
+          "../../test/testing/test.sh"
