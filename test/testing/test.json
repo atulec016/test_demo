@@ -2,7 +2,7 @@
    "job_id": 14715115339716,
    "new_settings": {
       "name": "Binary_Classification_Stock_Prediction_Training_Job",
-      "tasks": []
+      "tasks": [],
       "access_control_list": [
            {
                "group_name": "jsmith@example.com",
