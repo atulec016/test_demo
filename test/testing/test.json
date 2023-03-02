@@ -1,13 +1,13 @@
 {
    "job_id": 14715115339716,
-   "_comment": "Job ID will be replaced in the run time"
+   "_comment": "Job ID will be replaced in the run time",
    "new_settings": {
       "name": "Binary_Classification_Stock_Prediction_Training_Job",
       "tasks": [],
       "access_control_list": [
            {
                "group_name": "jsmith@example.com",
-               "_comment": "Group name will be fetched from the env variable"
+               "_comment": "Group name will be fetched from the env variable",
                "permission_level": "CAN_MANAGE"
             }
       ]
