@@ -3,6 +3,11 @@
    "new_settings": {
       "name": "Binary_Classification_Stock_Prediction_Training_Job",
       "tasks": []
-        
+      "access_control_list": [
+           {
+               "group_name": "jsmith@example.com",
+               "permission_level": "CAN_MANAGE"
+            }
+      ]
    }
 }
