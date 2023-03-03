@@ -20,3 +20,5 @@ jobs:
           echo ${GITHUB_REF##*/}
           version=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $version
+          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
+          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
