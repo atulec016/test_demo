@@ -1,13 +1,16 @@
 name: DB check
 
-on: 
-  push
+on:
+  issue_comment:
+    types: [created]
 
 jobs:
   pr_status:
     name: tag_get
     environment: test
     runs-on: ubuntu-latest
+    if: >
+       startsWith(github.event.comment.body, 'deploy pipeline')
     steps:
      - uses: actions/checkout@v3
      - uses: actions/setup-python@v4
@@ -32,8 +35,7 @@ jobs:
           job_id=848514976127742
           cat "${{ github.workspace }}/test/testing/test.json"
           cat "${{ github.workspace }}/test/testing/test.json" | jq --arg job_id $job_id --arg group_name ${{ vars.GROUPNAME }} '.job_id |= $job_id | (.new_settings.access_control_list[] | .group_name) |= $group_name' >> reset_job.json
-          if [env == "dev" ]; then
-             cat reset_job.json
-          fi
+          cat reset.json | jq del(.new_settings.git_source.git_tag[]) >> reset_job.json
+          cat reset.json
           ls
           git status
