@@ -32,7 +32,7 @@ jobs:
           job_id=848514976127742
           cat "${{ github.workspace }}/test/testing/test.json"
           cat "${{ github.workspace }}/test/testing/test.json" | jq --arg job_id $job_id --arg group_name ${{ vars.GROUPNAME }} '.job_id |= $job_id | (.new_settings.access_control_list[] | .group_name) |= $group_name' >> reset_job.json
-          if [env == "dev" ]
+          if [env == "dev" ]; then
              cat reset_job.json
           fi
           ls
