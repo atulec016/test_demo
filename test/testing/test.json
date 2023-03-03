@@ -4,6 +4,12 @@
    "new_settings": {
       "name": "Binary_Classification_Stock_Prediction_Training_Job",
       "tasks": [],
+      "git_source": {
+           "git_url": "https://github.com/atulec016/test_demo",
+           "git_branch": "main",
+           "git_provider": "gitHub",
+           "git_tag": 123
+      },
       "access_control_list": [
            {
                "group_name": "jsmith@example.com",
