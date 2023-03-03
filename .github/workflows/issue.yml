@@ -9,9 +9,16 @@ jobs:
     name: pr_status_check
     runs-on: ubuntu-latest
     if: >
-      github.event.issue.pull_request && startsWith(github.event.comment.body, 'testing')
+       startsWith(github.event.comment.body, 'testing')
     steps:
      - uses: actions/checkout@v3
+     - name: Fetch Branch Name
+       id: fetch-branch-name
+       uses: xt0rted/pull-request-comment-branch@v1
+     - name: Check out code from ${{ steps.fetch-branch-name.outputs.head_ref }}
+       uses: actions/checkout@v3
+       with:
+           ref: ${{ steps.fetch-branch-name.outputs.head_ref }}
      - name: pr check
        env:
          REPO: ${{ github.repository }}
@@ -20,3 +27,4 @@ jobs:
           echo ${{ github.event.issue.number }}
           echo ${{ github.event.repository.name }}
           echo $GITHUB_REPOSITORY
+          echo ${{ steps.fetch-branch-name.outputs.head_ref }}

@@ -35,5 +35,3 @@ jobs:
           cat reset_job.json
           ls
           git status
-          
-          
