@@ -42,7 +42,5 @@ jobs:
           cat "${{ github.workspace }}/test/testing/test.json"
           cat "${{ github.workspace }}/test/testing/test.json" | jq --arg job_id $job_id --arg group_name ${{ vars.GROUPNAME }} --arg branch ${{ steps.fetch-branch-name.outputs.head_ref }} '.job_id |= $job_id | (.new_settings.access_control_list[] | .group_name) |= $group_name | (.new_settings.git_source.git_branch) |= $branch | del(.new_settings.git_source.git_tag)' >> reset_job.json
           cat reset_job.json
-          cat reset_job.json | jq del(.new_settings.git_source.git_tag) >> reset_job_1.json
-          cat reset_job_1.json
           ls
           git status
