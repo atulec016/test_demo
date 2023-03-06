@@ -9,13 +9,8 @@ jobs:
     environment: test
     runs-on: ubuntu-latest
     steps:
-     - name: Fetch Branch Name
-       id: fetch-branch-name
-       uses: xt0rted/pull-request-comment-branch@v1
-     - name: Check out code from ${{ steps.fetch-branch-name.outputs.head_ref }}
+     - name: Check out code from
        uses: actions/checkout@v3
-       with:
-         ref: ${{ steps.fetch-branch-name.outputs.head_ref }}
      - uses: actions/setup-python@v4
        with:
            python-version: '3.9'
