@@ -1,16 +1,13 @@
 name: DB check
 
 on:
-  issue_comment:
-    types: [created]
+ push
 
 jobs:
   pr_status:
     name: tag_get
     environment: test
     runs-on: ubuntu-latest
-    if: >
-       startsWith(github.event.comment.body, 'deploy pipeline')
     steps:
      - name: Fetch Branch Name
        id: fetch-branch-name
@@ -22,26 +19,17 @@ jobs:
      - uses: actions/setup-python@v4
        with:
            python-version: '3.9'
-     - name: install-databricks-cli
-       run: |
-          pip install databricks-cli --upgrade
-          host=https://${{ secrets.DATABRICKS_INSTANCE }}
-          echo $host
-          echo "DATABRICKS_HOST=${{ env.DATABRICKS_HOST }}" >> $GITHUB_ENV
-          echo "DATABRICKS_TOKEN=${{ env.DATABRICKS_PAT }}" >> $GITHUB_ENV  
-          databricks jobs list --output json
-       env:
-         DATABRICKS_HOST: https://${{ secrets.DATABRICKS_INSTANCE }}
-         DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_PAT }}
      - name: tesing
        run: |
           echo ${{ github.workspace }}
           ls
           pwd
           job_id=848514976127742
+          tag=v1
+          echo $tag
           cat "${{ github.workspace }}/test/testing/test.json"
-          cat "${{ github.workspace }}/test/testing/test.json" | jq --arg job_id $job_id --arg group_name ${{ vars.GROUPNAME }} --branch ${{ steps.fetch-branch-name.outputs.head_ref }} '.job_id |= $job_id | (.new_settings.access_control_list[] | .group_name) |= $group_name |(.new_settings.github_source[] | .git_branch) |= $branch' >> reset_job.json
-          cat reset.json | jq del(.new_settings.git_source.git_tag[]) >> reset_job.json
+          cat "${{ github.workspace }}/test/testing/test.json" | jq --arg job_id $job_id --arg group_name ${{ vars.GROUPNAME }} --arg tag $tag '.job_id |= $job_id | (.new_settings.access_control_list[] | .group_name) |= $group_name |(.new_settings.github_source.git_tag) |= $tag' >> reset_job.json
+          cat reset.json | jq del(.new_settings.git_source.git_branch) >> reset_job.json
           cat reset.json
           ls
           git status
