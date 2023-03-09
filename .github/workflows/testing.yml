@@ -12,7 +12,7 @@ jobs:
     #   startsWith(github.event.comment.body, 'deploy pipeline')
     runs-on: ubuntu-latest
     environment: 
-      name: test
+      name: Test
     outputs:
       job_id: ${{ steps.job_id.outputs.job_id }}
     steps:
