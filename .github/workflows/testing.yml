@@ -1,12 +1,32 @@
+name: Databricks Pipeline deployment to dev
 on:
   push:
-    tags:
-      - '*'
+  # issue_comment:
+  #   types: [created]
+  workflow_dispatch:
+
 jobs:
-  github-example-tags:
+  training:
+    name: Databricks job execution
+    # if: >
+    #   startsWith(github.event.comment.body, 'deploy pipeline')
     runs-on: ubuntu-latest
+    environment: 
+      name: test
+    outputs:
+      job_id: ${{ steps.job_id.outputs.job_id }}
     steps:
-     - name: GitHub Tag Name example
-       run: |
-         echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-         echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+      - name: Repo Checkout
+        uses: actions/checkout@v3
+      - id: job_id
+        name: Create A Databricks Job For Training Model
+        run: |
+          job_id=$(curl -s -X GET "https://${{ vars.DATABRICKS_INSTANCE }}/api/2.1/jobs/list?limit=1" -H "Authorization: Bearer ${{ secrets.DATABRICKS_PAT }}" -H "Content-Type: application/json" | jq '.jobs[] | select(.settings.name == "Stock_Prediction_Training_Job")|.job_id')
+          echo "job_id=$job_id" >> $GITHUB_ENV
+          echo "job_id=$job_id" >> $GITHUB_OUTPUT
+          if [ -z "$job_id" ]; then
+            echo "Submitting new job to the workspace"
+            echo ${{ env.job_id }}
+          else
+           echo "Need to reset"
+          fi
