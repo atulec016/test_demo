@@ -10,6 +10,7 @@ on:
 jobs:
   Pipeline_exectuion:
     name: Pipeline_exectuion
+    environment: test
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v2
@@ -45,4 +46,12 @@ jobs:
              error_details="getig"
              echo "Sagemaker pipline failed at processing step: $step_name with reason: $error_details"
          fi
+    - name: Cloudwatch URL
+      run: |
+        logstream_value=$(aws logs describe-log-streams --log-group-name '/aws/lambda/test_lambda' --query 'logStreams[*].logStreamName' --max-items 1 --order-by LastEventTime --descending --output json |jq .[] | tr -d '"' | sed 's/\$/\$2524/g' |  sed 's/\[/\$255B/g' | sed 's/\]/\$255D/g' | sed 's|\/|\$252F|g')
+        echo $logstream_value
+        group='/aws/lambda/test_lambda'
+        log_group=$(echo $group | sed 's|\/|\$252F|g')
+        echo "Cloudwatch Log URL :" >> $GITHUB_STEP_SUMMARY 
+        echo "https://us-west-2.console.aws.amazon.com/cloudwatch/home?region=us-west-2#logsV2:log-groups/log-group/$log_group/log-events/$logstream_value" >> $GITHUB_STEP_SUMMARY
         
