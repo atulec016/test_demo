@@ -1,0 +1,9 @@
+{
+   
+   "starburst_username": "",
+   "starburst_password": "",
+   "starburst_host": "",
+   "pipeline":{
+        "name":"SlotOverbookingTraining"
+    }
+}
