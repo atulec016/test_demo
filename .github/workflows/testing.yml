@@ -18,6 +18,10 @@ jobs:
     steps:
       - name: Repo Checkout
         uses: actions/checkout@v3
+      - name: test
+        run: |
+          echo "{\"config_file_name_param\": \"config_test.txt\"}">$GITHUB_WORKSPACE/test/params.json
+          cat $GITHUB_WORKSPACE/test/params.json
       - id: job_id
         name: Create A Databricks Job For Training Model
         run: |
