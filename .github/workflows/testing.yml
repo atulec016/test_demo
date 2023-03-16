@@ -11,8 +11,6 @@ jobs:
     # if: >
     #   startsWith(github.event.comment.body, 'deploy pipeline')
     runs-on: ubuntu-latest
-    environment: 
-      name: Test
     outputs:
       job_id: ${{ steps.job_id.outputs.job_id }}
     steps:
@@ -22,7 +20,7 @@ jobs:
         run: |
           echo "{\"config_file_name_param\": \"config_test.txt\"}">$GITHUB_WORKSPACE/test/params.json
           cat $GITHUB_WORKSPACE/test/params.json
-          cat $GITHUB_WORKSPACE/test/test.txt | jq --arg starburst_username tatatatat@agagagag.com --arg starburst_password agagagagag '.starburst_username |= $starburst_username |.starburst_password |= $starburst_password' > new.txt
+          cat ${{ github.workspace }}/test/test.txt | jq --arg starburst_username tatatatat@agagagag.com --arg starburst_password agagagagag '.starburst_username |= $starburst_username |.starburst_password |= $starburst_password' > new.txt
           cat new.txt
       - id: job_id
         name: Create A Databricks Job For Training Model
