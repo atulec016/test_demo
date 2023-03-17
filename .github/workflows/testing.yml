@@ -30,6 +30,7 @@ jobs:
           echo "job_id=$job_id" >> $GITHUB_OUTPUT
           if [ -z "$job_id" ]; then
             echo "Submitting new job to the workspace"
+            echo "${{ github.event.repository.name }}"
             echo ${{ env.job_id }}
           else
            echo "Need to reset"
