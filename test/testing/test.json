@@ -1,14 +1,5 @@
 {
-  "name": "abc,
-  "tasks": [
-    
-      ],
-      "notebook_task": {
-        "notebook_path": "databricks-mlops/notebooks/model_promotion",
-        "source": "GIT"
-      }
-    }
-  ],
+  "name": "abc",
   "git_source": {
     "git_url": "https://github.com/GILEAD-DNA-PLATFORM/engineering-gdnamlops",
     "git_branch": "main",
