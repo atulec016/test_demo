@@ -12,13 +12,6 @@ jobs:
       job_id: ${{ steps.job_id.outputs.job_id }}
       run_id: ${{ steps.run_id.outputs.run_id }}
     steps:
-      - name: Fetch Branch Name
-        id: fetch-branch-name
-        uses: xt0rted/pull-request-comment-branch@v1
-      - name: Check out code from ${{ steps.fetch-branch-name.outputs.head_ref }}
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ steps.fetch-branch-name.outputs.head_ref }}
       - name: Repo Checkout
         uses: actions/checkout@v3
       - id: job_id
