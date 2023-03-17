@@ -1,1 +1,39 @@
-echo "Hello"
+name: Databricks Pipeline deployment to dev
+on:
+  workflow_call:
+   inputs:
+      BRANCH:
+        description: 'Branch Name'
+        required: true
+        type: string
+   secrets:
+      DATABRICKS_PAT:
+        description: 'username for DATABRICKS_PAT'
+        required: false
+
+jobs:
+  training:
+    name: Databricks job execution
+    runs-on: ubuntu-latest
+    environment: 
+      name: dev
+    outputs:
+      job_id: ${{ steps.job_id.outputs.job_id }}
+      run_id: ${{ steps.run_id.outputs.run_id }}
+    steps:
+      - name: Fetch Branch Name
+        id: fetch-branch-name
+        uses: xt0rted/pull-request-comment-branch@v1
+      - name: Check out code from ${{ steps.fetch-branch-name.outputs.head_ref }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.fetch-branch-name.outputs.head_ref }}
+      - name: Repo Checkout
+        uses: actions/checkout@v3
+      - id: job_id
+        name: Create A Databricks Job For Training Model
+        run: |
+          echo "${{ steps.fetch-branch-name.outputs.head_ref }}"
+          job_id=$(curl -s -X GET "https://${{ vars.DATABRICKS_INSTANCE }}/api/2.1/jobs/list?limit=1" -H "Authorization: Bearer ${{ secrets.DATABRICKS_PAT }}" -H "Content-Type: application/json" | jq '.jobs[]? | select(.settings.name == "Stock_Prediction_Training_Job")|.job_id')
+          echo "job_id=$job_id" >> $GITHUB_ENV
+          echo "job_id=$job_id" >> $GITHUB_OUTPUT
