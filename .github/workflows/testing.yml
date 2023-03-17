@@ -1,7 +1,10 @@
 name: Databricks Pipeline deployment to dev
 on:
   workflow_call:
-
+    secrets:
+      DATABRICKS_PAT: 
+        description: 'PAt'
+        required: true
 jobs:
   training:
     name: Databricks job execution
