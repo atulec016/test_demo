@@ -20,6 +20,8 @@ jobs:
           echo ${{github.ref_name}}
           echo "${{ steps.fetch-branch-name.outputs.head_ref }}"
           # echo "${{ inputs.BRANCH }}"
-          job_id=$(curl -s -X GET "https://${{ vars.DATABRICKS_INSTANCE }}/api/2.1/jobs/list?limit=1" -H "Authorization: Bearer ${{ secrets.DATABRICKS_PAT }}" -H "Content-Type: application/json" | jq '.jobs[]? | select(.settings.name == "Stock_Prediction_Training_Job")|.job_id')
+          echo ${{ secrets.DATABRICKS_PAT }}
+          job_id=$(curl -s -i -X GET "https://${{ vars.DATABRICKS_INSTANCE }}/api/2.1/jobs/list?limit=1" -H "Authorization: Bearer ${{ secrets.DATABRICKS_PAT }}" -H "Content-Type: application/json" | jq '.jobs[]? | select(.settings.name == "Stock_Prediction_Training_Job")|.job_id')
+          echo $job_id
           echo "job_id=$job_id" >> $GITHUB_ENV
           echo "job_id=$job_id" >> $GITHUB_OUTPUT
