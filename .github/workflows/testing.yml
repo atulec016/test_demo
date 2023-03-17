@@ -1,11 +1,6 @@
 name: Databricks Pipeline deployment to dev
 on:
   workflow_call:
-   inputs:
-      BRANCH:
-        description: 'Branch Name'
-        required: true
-        type: string
    secrets:
       DATABRICKS_PAT:
         description: 'username for DATABRICKS_PAT'
@@ -34,7 +29,7 @@ jobs:
         name: Create A Databricks Job For Training Model
         run: |
           echo "{{ steps.fetch-branch-name.outputs.head_ref }}"
-          echo "${{ inputs.BRANCH }}"
+          # echo "${{ inputs.BRANCH }}"
           job_id=$(curl -s -X GET "https://${{ vars.DATABRICKS_INSTANCE }}/api/2.1/jobs/list?limit=1" -H "Authorization: Bearer ${{ secrets.DATABRICKS_PAT }}" -H "Content-Type: application/json" | jq '.jobs[]? | select(.settings.name == "Stock_Prediction_Training_Job")|.job_id')
           echo "job_id=$job_id" >> $GITHUB_ENV
           echo "job_id=$job_id" >> $GITHUB_OUTPUT
