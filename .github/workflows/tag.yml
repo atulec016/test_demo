@@ -1,24 +1,30 @@
-name: Tag request Status
+name: DB check
 
-on: 
-  push:
-    tags: 
-      - '*'
+on:
+ push
 
 jobs:
   pr_status:
     name: tag_get
+    environment: test
     runs-on: ubuntu-latest
     steps:
-     - uses: actions/checkout@v3
-     - name: pr check
-       env:
-         REPO: ${{ github.repository }}
-         PR_NUMBER : ${{ github.event.pull_request.number }}
+     - name: Check out code from
+       uses: actions/checkout@v3
+     - uses: actions/setup-python@v4
+       with:
+           python-version: '3.9'
+     - name: tesing
        run: |
-          echo ${{github.ref}}
-          echo ${GITHUB_REF##*/}
-          version=$(echo $GITHUB_REF | cut -d / -f 3)
-          echo $version
-          echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-          echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+          echo ${{ github.workspace }}
+          ls
+          pwd
+          job_id=848514976127742
+          tag=v1
+          echo $tag
+          cat "${{ github.workspace }}/test/testing/test.json"
+          cat "${{ github.workspace }}/test/testing/test.json" | jq --arg job_id $job_id --arg group_name ${{ vars.GROUPNAME }} --arg tag $tag '.job_id |= $job_id | (.new_settings.access_control_list[] | .group_name) |= $group_name | (.new_settings.git_source.git_tag) |= $tag' >> reset_job.json
+          cat reset_job.json | jq 'del(.new_settings.git_source.git_branch)' >> reset_job.json
+          cat reset_job.json
+          ls
+          git status
