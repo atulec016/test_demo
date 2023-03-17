@@ -20,8 +20,8 @@ jobs:
         run: |
           echo "{\"config_file_name_param\": \"config_test.txt\"}">$GITHUB_WORKSPACE/test/params.json
           cat $GITHUB_WORKSPACE/test/params.json
-          cat $GITHUB_WORKSPACE/test/testing/test.txt | jq --arg policy_id tatatatat@agagagag.com  '.job_clusters.new_cluster.policy_id |= $policy_id' > new.txt
-          cat new.txt
+          cat $GITHUB_WORKSPACE/test/testing/test.json | jq --arg policy_id tatatatat@agagagag.com  '.job_clusters.new_cluster.policy_id |= $policy_id' > new.json
+          cat new.json
       - id: job_id
         name: Create A Databricks Job For Training Model
         run: |
